@@ -1,13 +1,19 @@
-<div style="background:#333; color:white; padding:10px; display:flex; justify-content:space-between;">
+<div class="navbar">
 
     <div>
         Welcome, <?php echo $_SESSION['username']; ?>
     </div>
 
-    <div>
-        Role: <?php echo $_SESSION['role']; ?>
-        |
-        <a href="logout.php" style="color:white;">Logout</a>
+    <div class="admin-info">
+
+        <span>
+            Role: <?php echo $_SESSION['role']; ?>
+        </span>
+
+        <a href="logout.php">
+            Logout
+        </a>
+
     </div>
 
 </div>
