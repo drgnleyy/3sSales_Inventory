@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 require_once dirname(__DIR__, 2) . '/config/database.php';
 
@@ -17,62 +16,82 @@ $result = mysqli_query($conn, $query);
 <html>
 <head>
     <title>View Products</title>
+    <!-- UNIVERSAL CSS -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 
-<h2>Products List</h2>
+<!-- NAVBAR -->
+<?php include dirname(__DIR__, 2) . '/includes/navbar.php'; ?>
 
-<a href="add_product.php">Add Product</a>
+<!-- SIDEBAR -->
+<?php include dirname(__DIR__, 2) . '/includes/sidebar.php'; ?>
 
-<br><br>
+<!-- MAIN CONTENT CONTAINER (This prevents the sidebar from overlapping) -->
+<div class="main-content">
 
-<table border="1" cellpadding="10">
+    <div class="page-title">
+        <h1>Products List</h1>
+        <p>Manage and track your inventory stock levels</p>
+    </div>
 
-<tr>
-    <th>ID</th>
-    <th>Product Name</th>
-    <th>Category</th>
-    <th>Stock</th>
-    <th>Buying Price</th>
-    <th>Selling Price</th>
-    <th>Actions</th>
-</tr>
+    <!-- TABLE CONTAINER (Using your exact style system classes) -->
+    <div class="table-container">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Products Inventory</h2>
+            <!-- Styling the Add Product link using your theme's primary button class -->
+            <a href="add_product.php" class="btn btn-primary">Add Product</a>
+        </div>
 
-<?php while($row = mysqli_fetch_assoc($result)){ ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Buying Price</th>
+                    <th>Selling Price</th>
+                    <th style="text-align: center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while($row = mysqli_fetch_assoc($result)){ ?>
+                <tr>
+                    <td><?php echo $row['product_id']; ?></td>
+                    <td><strong><?php echo htmlspecialchars($row['product_name']); ?></strong></td>
+                    <td><?php echo htmlspecialchars($row['brand']); ?></td>
+                    <td><?php echo htmlspecialchars($row['category']); ?></td>
+                    
+                    <td>
+                        <?php if($row['stock'] <= 5) { ?>
+                            <span class="badge badge-danger"><?php echo $row['stock']; ?> (Low)</span>
+                        <?php } else { ?>
+                            <span class="badge badge-success"><?php echo $row['stock']; ?></span>
+                        <?php } ?>
+                    </td>
+                    
+                    <td>₱<?php echo number_format($row['buying_price'], 2); ?></td>
+                    <td>₱<?php echo number_format($row['selling_price'], 2); ?></td>
+                    
+                    <td style="text-align: center;">
+                        <a href="edit_product.php?id=<?php echo $row['product_id']; ?>" class="btn btn-warning" style="padding: 6px 12px; font-size: 13px;">
+                            Edit
+                        </a>
+                        <a href="delete_product.php?id=<?php echo $row['product_id']; ?>" class="btn btn-danger" style="padding: 6px 12px; font-size: 13px;">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
 
-<tr>
+    </div>
 
-    <td><?php echo $row['product_id']; ?></td>
-
-    <td><?php echo $row['product_name']; ?></td>
-
-    <td><?php echo $row['category']; ?></td>
-
-    <td><?php echo $row['stock']; ?></td>
-
-    <td><?php echo $row['buying_price']; ?></td>
-
-    <td><?php echo $row['selling_price']; ?></td>
-
-    <td>
-
-        <a href="edit_product.php?id=<?php echo $row['product_id']; ?>">
-            Edit
-        </a>
-
-        |
-
-        <a href="delete_product.php?id=<?php echo $row['product_id']; ?>">
-            Delete
-        </a>
-
-    </td>
-
-</tr>
-
-<?php } ?>
-
-</table>
+</div>
 
 </body>
 </html>

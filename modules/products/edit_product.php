@@ -22,6 +22,7 @@ $row = mysqli_fetch_assoc($result);
 if(isset($_POST['update_product'])){
 
     $product_name = $_POST['product_name'];
+    $brand = $_POST['brand'];
     $category = $_POST['category'];
     $stock = $_POST['stock'];
     $buying_price = $_POST['buying_price'];
@@ -30,6 +31,7 @@ if(isset($_POST['update_product'])){
     $update = "UPDATE products SET
 
     product_name='$product_name',
+    brand='$brand',
     category='$category',
     stock='$stock',
     buying_price='$buying_price',
