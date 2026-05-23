@@ -10,8 +10,8 @@
     <!-- ADMIN ONLY -->
     <?php if($_SESSION['role'] == 'admin'){ ?>
 
-        <a href="modules/inventory/stock_in.php" style="color:white; display:block;">Inventory</a>
-        <a href="modules/reports/sales_report.php" style="color:white; display:block;">Reports</a>
+        <a href="modules/inventor/stock_in.php" style="color:white; display:block;">Inventory</a>
+        <a href="modules/rep/sales_report.php" style="color:white; display:block;">Reports</a>
         <a href="modules/users/view_users.php" style="color:white; display:block;">Users</a>
 
     <?php } ?>
