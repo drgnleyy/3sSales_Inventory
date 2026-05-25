@@ -16,8 +16,6 @@ if(!isset($_SESSION['user_id'])){
 <head>
 
     <title>Dashboard</title>
-
-    <!-- UNIVERSAL CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
 
 </head>
@@ -32,15 +30,17 @@ if(!isset($_SESSION['user_id'])){
 
 <!-- MAIN CONTENT -->
 <div class="main-content">
+    
+<div class="sales-page">
 
-    <div class="page-title">
+      <div>
+            <h1 class="sales-title">Admin Dashboard</h1>
+            <p class="sales-subtitle">
+                Welcome to Sales and Inventory System
+            </p>
+        </div>
 
-        <h1>Admin Dashboard</h1>
-
-        <p>
-            Welcome to Sales and Inventory System
-        </p>
-
+   
     </div>
 
     <?php
@@ -210,6 +210,6 @@ if(!isset($_SESSION['user_id'])){
     </div>
 
 </div>
-
+</div>
 </body>
 </html>

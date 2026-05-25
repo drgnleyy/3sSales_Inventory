@@ -105,7 +105,7 @@ $catalog_products = mysqli_query($conn, "SELECT * FROM products WHERE $where_cla
 <html>
 <head>
     <title>Process Sale</title>
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -239,143 +239,190 @@ $catalog_products = mysqli_query($conn, "SELECT * FROM products WHERE $where_cla
                 }
                 ?>
             </div>
-
-            <div class="transaction-card">
-
-    <div class="section-header">
-        <h3>Transaction Details</h3>
-    </div>
-
-    <div class="selected-product-box">
-
-    <label>Selected Product</label>
-
-    <div id="selected_display_name">
-        No product selected
-    </div>
-
-</div>
-
-    <div class="form-group">
-        <label>Quantity</label>
-        <input
-            type="number"
-            id="left_quantity"
-            class="form-control"
-            value="1"
-            min="1"
-            disabled
-        >
-    </div>
-
-    <button
-        class="btn btn-success"
-        type="button"
-        id="add_item_btn"
-        onclick="addSelectedToRightSection()"
-        disabled>
-        Add Item
-    </button>
-
-    <div class="form-group">
-        <label>Cash Received</label>
-
-        <input
-            type="number"
-            step="0.01"
-            class="form-control"
-            name="payment"
-            id="left_payment"
-            placeholder="0.00"
-            oninput="calculateSaleChange()"
-            required
-        >
-    </div>
-
-</div>
-            
-            
-            <input type="hidden" id="selected_product_id">
-            <input type="hidden" id="selected_product_price">
-            <input type="hidden" id="selected_product_stock">
-           
-            
         </div>
 
-        <!-- RIGHT SECTION: CURRENT SALE DETAIL -->
-        <div class="sale-summary-card"
-     id="right_section_cell"
-     style="display:none;">
+            <!-- RIGHT SECTION: CURRENT SALE DETAIL -->
+<div class="sale-summary-card" id="right_section_cell">
 
     <div class="summary-header">
-        <h2>Current Sale</h2>
+        <h2>🛒 CURRENT SALE DETAIL</h2>
 
         <button
             type="button"
             class="cancel-btn"
             onclick="cancelTransaction()">
-            Cancel
+            Cancel Sale
         </button>
     </div>
 
-    <table class="sale-table" id="sale_detail_table">
-                <thead>
-                    <tr>
-                        <th>Buy</th>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Qty</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($all_products_list as $prod): ?>
-                        <tr id="row_<?php echo $prod['product_id']; ?>" style="display: none;">
-                            <td align="center"><input type="checkbox" name="checked_products[]" value="<?php echo $prod['product_id']; ?>" id="chk_<?php echo $prod['product_id']; ?>" onchange="toggleItemActivation('<?php echo $prod['product_id']; ?>', <?php echo $prod['selling_price']; ?>)"></td>
-                            <td><?php echo htmlspecialchars($prod['product_name']); ?></td>
-                            <td align="right">₱<?php echo number_format($prod['selling_price'], 2); ?></td>
-                            <td><input type="number" name="quantity[<?php echo $prod['product_id']; ?>]" id="qty_<?php echo $prod['product_id']; ?>" min="1" max="<?php echo $prod['stock']; ?>" value="1" style="width: 40px;" oninput="recalculateRow('<?php echo $prod['product_id']; ?>', <?php echo $prod['selling_price']; ?>)" disabled></td>
-                            <td align="right" id="sub_<?php echo $prod['product_id']; ?>">₱0.00</td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+    <div class="current-transaction-box">
+        <label>Selected Product</label>
 
-            <div class="sale-totals">
+        <div id="selected_display_name" class="selected-sale-name">
+            No product selected
+        </div>
 
-    <div class="total-row">
-        <span>Total</span>
-        <strong>₱<span id="total_sale_display">0.00</span></strong>
+        <div class="current-transaction-row">
+            <div class="current-qty-group">
+                <label>Qty</label>
+                <input
+                    type="number"
+                    id="left_quantity"
+                    class="form-control"
+                    value="1"
+                    min="1"
+                    disabled
+                >
+            </div>
+<br>
+            <button
+                class="btn btn-success add-current-btn"
+                type="button"
+                id="add_item_btn"
+                onclick="addSelectedToRightSection()"
+                disabled>
+                Add Item
+            </button>
+        </div>
     </div>
 
-    <div class="total-row">
-        <span>Change</span>
-        <strong>₱<span id="change_due_display">0.00</span></strong>
+    <input type="hidden" id="selected_product_id">
+    <input type="hidden" id="selected_product_price">
+    <input type="hidden" id="selected_product_stock">
+
+    <table class="sale-table" id="sale_detail_table">
+        <thead>
+            <tr>
+                <th>Buy</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php foreach ($all_products_list as $prod): ?>
+                <tr id="row_<?php echo $prod['product_id']; ?>" style="display: none;">
+                    <td align="center">
+                        <input
+                            type="checkbox"
+                            name="checked_products[]"
+                            value="<?php echo $prod['product_id']; ?>"
+                            id="chk_<?php echo $prod['product_id']; ?>"
+                            onchange="toggleItemActivation('<?php echo $prod['product_id']; ?>', <?php echo $prod['selling_price']; ?>)"
+                        >
+                    </td>
+
+                    <td><?php echo htmlspecialchars($prod['product_name']); ?></td>
+
+                    <td align="right">
+                        ₱<?php echo number_format($prod['selling_price'], 2); ?>
+                    </td>
+
+                    <td>
+                        <input
+                            type="number"
+                            name="quantity[<?php echo $prod['product_id']; ?>]"
+                            id="qty_<?php echo $prod['product_id']; ?>"
+                            min="1"
+                            max="<?php echo $prod['stock']; ?>"
+                            value="1"
+                            class="sale-qty-input"
+                            oninput="recalculateRow('<?php echo $prod['product_id']; ?>', <?php echo $prod['selling_price']; ?>)"
+                            disabled
+                        >
+                    </td>
+
+                    <td align="right" id="sub_<?php echo $prod['product_id']; ?>">
+                        ₱0.00
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+   
+
+    <div class="sale-totals">
+
+        <div class="total-row">
+            <span>Total Sale Amount</span>
+            <strong>₱<span id="total_sale_display">0.00</span></strong>
+        </div>
+
+        <div class="cash-row">
+            <label>Cash Entered</label>
+
+            <div class="cash-input-wrap">
+                <span>₱</span>
+                <input
+                    type="number"
+                    step="0.01"
+                    name="payment"
+                    id="left_payment"
+                    placeholder="0.00"
+                    oninput="calculateSaleChange()"
+                    required
+                >
+            </div>
+        </div>
+
+        <div class="total-row">
+            <span>Change Due</span>
+            <strong class="change-text">₱<span id="change_due_display">0.00</span></strong>
+        </div>
+
+    </div>
+
+    <div class="payment-note">
+        Please enter the cash amount received from the customer.
+    </div>
+
+    <button
+        type="button"
+        id="trigger_checkout_btn"
+        class="checkout-btn"
+        onclick="initiateCheckoutVerification()">
+        Proceed and Print Receipt
+    </button>
+
+    <div id="checkout_warning_panel" class="confirm-panel" style="display: none;">
+        <h4>CONFIRM TRANSACTION</h4>
+
+        <p>
+            Checked Items: <span id="warn_items_count">0</span><br>
+            Total: ₱<span id="warn_total_val">0.00</span><br>
+            Cash: ₱<span id="warn_cash_val">0.00</span><br>
+            Change: ₱<span id="warn_change_val">0.00</span>
+        </p>
+
+        <label class="verify-row">
+            <input
+                type="checkbox"
+                id="warning_verify_chk"
+                onchange="toggleFinalCheckoutButton()">
+            I verify this is correct.
+        </label>
+
+        <div class="confirm-actions">
+            <button
+                type="submit"
+                name="process_sale"
+                id="final_checkout_submit"
+                disabled>
+                Confirm
+            </button>
+
+            <button
+                type="button"
+                onclick="cancelCheckoutProcess()">
+                Cancel
+            </button>
+        </div>
     </div>
 
 </div>
-            <button
-type="button"
-id="trigger_checkout_btn"
-class="checkout-btn"
-onclick="initiateCheckoutVerification()">
-
-Proceed & Print Receipt
-
-</button>
-
-            <div id="checkout_warning_panel" style="display: none; border: 2px solid red; margin-top: 15px; padding: 10px; background-color: #fffff0;">
-                <h4>⚠️ CONFIRM TRANSACTION</h4>
-                <p>Checked Items: <span id="warn_items_count">0</span><br>
-                Total: ₱<span id="warn_total_val">0.00</span><br>
-                Cash: ₱<span id="warn_cash_val">0.00</span><br>
-                Change: ₱<span id="warn_change_val">0.00</span></p>
-                <input type="checkbox" id="warning_verify_chk" onchange="toggleFinalCheckoutButton()"> I verify this is correct.<br><br>
-                <button type="submit" name="process_sale" id="final_checkout_submit" disabled>Confirm</button>
-                <button type="button" onclick="cancelCheckoutProcess()">Cancel</button>
-            </div>
-        </div>
-    </div>
 </form>
 </div>
 </div>
@@ -397,29 +444,54 @@ Proceed & Print Receipt
         document.getElementById('add_item_btn').disabled = false;
     }
     function addSelectedToRightSection() {
-        var id = document.getElementById('selected_product_id').value;
-        var qty = parseInt(document.getElementById('left_quantity').value);
-        var price = parseFloat(document.getElementById('selected_product_price').value);
-        var maxStock = parseInt(document.getElementById('selected_product_stock').value);
-        if (qty > maxStock) { alert("Insufficient inventory!"); return; }
-        var chk = document.getElementById('chk_' + id);
-        var qtyInput = document.getElementById('qty_' + id);
-        var row = document.getElementById('row_' + id);
-        var rightCell = document.getElementById('right_section_cell');
-        rightCell.style.display = 'block';
-        row.style.display = 'table-row';
-        chk.checked = true;
-        qtyInput.disabled = false;
-        qtyInput.value = qty;
-        recalculateRow(id, price);
+    var id = document.getElementById('selected_product_id').value;
+    var qty = parseInt(document.getElementById('left_quantity').value);
+    var price = parseFloat(document.getElementById('selected_product_price').value);
+    var maxStock = parseInt(document.getElementById('selected_product_stock').value);
+
+    if (!id) {
+        alert("Please select a product first.");
+        return;
     }
+
+    if (isNaN(qty) || qty < 1) {
+        alert("Quantity must be at least 1.");
+        document.getElementById('left_quantity').value = 1;
+        return;
+    }
+
+    if (qty > maxStock) {
+        alert("Insufficient inventory!");
+        document.getElementById('left_quantity').value = maxStock;
+        return;
+    }
+
+    var chk = document.getElementById('chk_' + id);
+    var qtyInput = document.getElementById('qty_' + id);
+    var row = document.getElementById('row_' + id);
+    var rightCell = document.getElementById('right_section_cell');
+
+    if (!chk || !qtyInput || !row) {
+        alert("Product row not found.");
+        return;
+    }
+
+    rightCell.style.display = 'block';
+    row.style.display = 'table-row';
+
+    chk.checked = true;
+    qtyInput.disabled = false;
+    qtyInput.value = qty;
+
+    recalculateRow(id, price);
+}
     function toggleItemActivation(id, price) {
         var chk = document.getElementById('chk_' + id);
         var qtyInput = document.getElementById('qty_' + id);
         var row = document.getElementById('row_' + id);
         var rightCell = document.getElementById('right_section_cell');
         if (chk.checked) { rightCell.style.display = 'block'; row.style.display = 'table-row'; qtyInput.disabled = false; }
-        else { row.style.display = 'none'; qtyInput.disabled = true; }
+        else { row.style.display = 'none'; qtyInput.disabled = true; chk.checked = false; }
         recalculateRow(id, price);
     }
     function recalculateRow(id, price) {
@@ -446,15 +518,26 @@ Proceed & Print Receipt
         document.getElementById('change_due_display').innerText = (isNaN(payment) ? 0 : payment - total).toFixed(2);
     }
     function initiateCheckoutVerification() {
-        var total = parseFloat(document.getElementById('total_sale_display').innerText);
-        var payment = parseFloat(document.getElementById('left_payment').value);
-        if (total === 0) { alert("Select at least 1 item."); return; }
-        if (isNaN(payment) || payment < total) { alert("Insufficient payment."); return; }
-        document.getElementById('warn_total_val').innerText = total.toFixed(2);
-        document.getElementById('warn_cash_val').innerText = payment.toFixed(2);
-        document.getElementById('warn_change_val').innerText = (payment - total).toFixed(2);
-        document.getElementById('checkout_warning_panel').style.display = 'block';
+    var total = parseFloat(document.getElementById('total_sale_display').innerText);
+    var payment = parseFloat(document.getElementById('left_payment').value);
+    var checkedCount = document.querySelectorAll('input[name="checked_products[]"]:checked').length;
+
+    if (total === 0) {
+        alert("Select at least 1 item.");
+        return;
     }
+
+    if (isNaN(payment) || payment < total) {
+        alert("Insufficient payment.");
+        return;
+    }
+
+    document.getElementById('warn_items_count').innerText = checkedCount;
+    document.getElementById('warn_total_val').innerText = total.toFixed(2);
+    document.getElementById('warn_cash_val').innerText = payment.toFixed(2);
+    document.getElementById('warn_change_val').innerText = (payment - total).toFixed(2);
+    document.getElementById('checkout_warning_panel').style.display = 'block';
+}
     function toggleFinalCheckoutButton() { document.getElementById('final_checkout_submit').disabled = !document.getElementById('warning_verify_chk').checked; }
     function cancelCheckoutProcess() { document.getElementById('checkout_warning_panel').style.display = 'none'; }
     function cancelTransaction() { location.reload(); }

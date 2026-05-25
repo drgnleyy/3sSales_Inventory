@@ -57,7 +57,7 @@ $current_page = basename($script_name);
             Sales
         </a>
 
-        <a href="<?php echo $base_url; ?>modules/inventor/stock_in.php" class="<?php echo ($current_page == 'stock_in.php') ? 'active' : ''; ?>">
+        <a href="<?php echo $base_url; ?>modules/inventor/inventor_history.php" class="<?php echo ($current_page == 'stock_in.php') ? 'active' : ''; ?>">
             Inventory
         </a>
 

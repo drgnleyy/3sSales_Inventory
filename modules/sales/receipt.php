@@ -1,115 +1,144 @@
 <?php
-
 session_start();
 require_once dirname(__DIR__, 2) . '/config/database.php';
 
-if(!isset($_SESSION['user_id'])){
+if (!isset($_SESSION['user_id'])) {
     header("Location: ../../login.php");
     exit();
 }
 
-$id = $_GET['id'];
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 /* FETCH SALE */
 $sale_query = mysqli_query($conn,
-
-    "SELECT sales.*,
-            users.username
-
+    "SELECT sales.*, users.username
      FROM sales
-
-     INNER JOIN users
-     ON sales.sold_by = users.id
-
-     WHERE sale_id='$id'"
-
+     INNER JOIN users ON sales.sold_by = users.id
+     WHERE sales.sale_id = '$id'"
 );
 
 $sale = mysqli_fetch_assoc($sale_query);
 
+if (!$sale) {
+    echo "Receipt not found.";
+    exit();
+}
+
 /* FETCH ITEMS */
 $items_query = mysqli_query($conn,
-
-    "SELECT sale_items.*,
-            products.product_name
-
+    "SELECT sale_items.*, products.product_name
      FROM sale_items
-
-     INNER JOIN products
-     ON sale_items.product_id = products.product_id
-
-     WHERE sale_items.sale_id='$id'"
-
+     INNER JOIN products ON sale_items.product_id = products.product_id
+     WHERE sale_items.sale_id = '$id'"
 );
-
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Receipt</title>
+    <link rel="stylesheet" href="../../assets/css/style.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
-<h2>Sales Receipt</h2>
+<?php include dirname(__DIR__, 2) . '/includes/navbar.php'; ?>
+<?php include dirname(__DIR__, 2) . '/includes/sidebar.php'; ?>
 
-<p>Receipt #: <?php echo $sale['sale_id']; ?></p>
+<div class="main-content">
 
-<p>Cashier: <?php echo $sale['username']; ?></p>
 
-<p>Date: <?php echo $sale['created_at']; ?></p>
+<a href="sales_history.php" class="icon-back-btn" aria-label="Back to new sale">
+            &#8592;
+        </a>
+    <div class="receipt-page">
 
-<hr>
+        <div class="receipt-modal">
 
-<table border="1" cellpadding="10">
+            <div class="receipt-header">
+                <h2>Sales System</h2>
+                <p>Official Sales Receipt</p>
+            </div>
 
-<tr>
+            <div class="receipt-meta">
+                <div>
+                    <span>Receipt #</span>
+                    <strong><?php echo $sale['sale_id']; ?></strong>
+                </div>
 
-    <th>Product</th>
-    <th>Qty</th>
-    <th>Price</th>
-    <th>Subtotal</th>
+                <div>
+                    <span>Cashier</span>
+                    <strong><?php echo htmlspecialchars($sale['username']); ?></strong>
+                </div>
 
-</tr>
+                <div>
+                    <span>Date</span>
+                    <strong><?php echo date("m/d/Y", strtotime($sale['created_at'])); ?></strong>
+                </div>
+            </div>
 
-<?php while($row = mysqli_fetch_assoc($items_query)){ ?>
+            <div class="receipt-divider"></div>
 
-<tr>
+            <div class="receipt-items">
 
-    <td><?php echo $row['product_name']; ?></td>
+                <div class="receipt-items-head">
+                    <span>Item</span>
+                    <span>Qty</span>
+                    <span>Price</span>
+                    <span>Total</span>
+                </div>
 
-    <td><?php echo $row['quantity']; ?></td>
+                <?php while ($row = mysqli_fetch_assoc($items_query)) { ?>
+                    <div class="receipt-item-row">
+                        <span class="receipt-product-name">
+                            <?php echo htmlspecialchars($row['product_name']); ?>
+                        </span>
 
-    <td>
-        ₱<?php echo number_format($row['price'],2); ?>
-    </td>
+                        <span><?php echo $row['quantity']; ?></span>
 
-    <td>
-        ₱<?php echo number_format($row['subtotal'],2); ?>
-    </td>
+                        <span>₱<?php echo number_format($row['price'], 2); ?></span>
 
-</tr>
+                        <span>₱<?php echo number_format($row['subtotal'], 2); ?></span>
+                    </div>
+                <?php } ?>
 
-<?php } ?>
+            </div>
 
-</table>
+            <div class="receipt-divider"></div>
 
-<hr>
+            <div class="receipt-totals">
+                <div>
+                    <span>Total</span>
+                    <strong>₱<?php echo number_format($sale['total_amount'], 2); ?></strong>
+                </div>
 
-<p>
-Total:
-₱<?php echo number_format($sale['total_amount'],2); ?>
-</p>
+                <div>
+                    <span>Payment</span>
+                    <strong>₱<?php echo number_format($sale['payment'], 2); ?></strong>
+                </div>
 
-<p>
-Payment:
-₱<?php echo number_format($sale['payment'],2); ?>
-</p>
+                <div class="receipt-change">
+                    <span>Change</span>
+                    <strong>₱<?php echo number_format($sale['change_amount'], 2); ?></strong>
+                </div>
+            </div>
 
-<p>
-Change:
-₱<?php echo number_format($sale['change_amount'],2); ?>
-</p>
+            <div class="receipt-footer">
+                <p>Thank you for your purchase!</p>
+                <small>Please keep this receipt for your records.</small>
+            </div>
+
+            <div class="receipt-actions">
+                <a href="new_sale.php" class="receipt-back-btn">Back</a>
+                <button type="button" class="receipt-print-btn" onclick="window.print()">
+                    Print Receipt
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 </body>
 </html>
