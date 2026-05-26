@@ -53,6 +53,8 @@ $current_page = basename($script_name);
             Products
         </a>
 
+        <a href="<?php echo $base_url; ?>modules/requests/view_requests.php" class="<?php echo ($current_page == 'view_requests.php') ? 'active' : ''; ?>"> Requests History </a>
+
         <a href="<?php echo $base_url; ?>modules/sales/new_sale.php" class="<?php echo ($current_page == 'new_sale.php') ? 'active' : ''; ?>">
             Sales
         </a>

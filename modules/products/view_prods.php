@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 require_once dirname(__DIR__, 2) . '/config/database.php';
 
@@ -18,7 +17,7 @@ $result = mysqli_query($conn, $query);
 <head>
     <title>View Products</title>
     <!-- UNIVERSAL CSS -->
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -28,53 +27,139 @@ $result = mysqli_query($conn, $query);
 <!-- SIDEBAR -->
 <?php include dirname(__DIR__, 2) . '/includes/sidebar.php'; ?>
 
-<h2>Products List</h2>
+<!-- MAIN CONTENT CONTAINER (This prevents the sidebar from overlapping) -->
+<div class="main-content">
 
+   <div class="sales-page">
 
+      <div>
+            <h1 class="sales-title">Product List</h1>
+            <p class="sales-subtitle">
+                Manage and track your inventory stock levels
+            </p>
+        </div>
 
-<br><br>
-<a href="../requests/request_product.php"
-       class="btn btn-primary">
+   
+    </div>
 
-       Request Product
+    <!-- TABLE CONTAINER (Using your exact style system classes) -->
+    <div class="table-container">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Products Inventory</h2>
+            <!-- Styling the Add Product link using your theme's primary button class -->
+            <button type="button" class="btn btn-primary" onclick="openRequestProductModal()">
+    Request Product
+</button>   
+        </div>
 
-    </a>
-<table border="1" cellpadding="10">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Buying Price</th>
+                    <th>Selling Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while($row = mysqli_fetch_assoc($result)){ ?>
+                <tr>
+                    <td><?php echo $row['product_id']; ?></td>
+                    <td><strong><?php echo htmlspecialchars($row['product_name']); ?></strong></td>
+                    <td><?php echo htmlspecialchars($row['brand']); ?></td>
+                    <td><?php echo htmlspecialchars($row['category']); ?></td>
+                    
+                    <td>
+                        <?php if($row['stock'] <= 5) { ?>
+                            <span class="badge badge-danger"><?php echo $row['stock']; ?> (Low)</span>
+                        <?php } else { ?>
+                            <span class="badge badge-success"><?php echo $row['stock']; ?></span>
+                        <?php } ?>
+                    </td>
+                    
+                    <td>₱<?php echo number_format($row['buying_price'], 2); ?></td>
+                    <td>₱<?php echo number_format($row['selling_price'], 2); ?></td>
+                    
+                
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
 
-<tr>
-    <th>ID</th>
-    <th>Product Name</th>
-    <th>Brand</th>
-    <th>Category</th>
-    <th>Stock</th>
-    <th>Buying Price</th>
-    <th>Selling Price</th>
-</tr>
+    </div>
 
-<?php while($row = mysqli_fetch_assoc($result)){ ?>
+</div>
+<!-- ADD PRODUCT MODAL -->
+<!-- REQUEST PRODUCT MODAL -->
+<div class="modal-overlay" id="RequestProductModal">
 
-<tr>
+    <div class="add-product-card">
 
-    <td><?php echo $row['product_id']; ?></td>
+        <div class="modal-header">
+            <h2>Request Product</h2>
 
-    <td><?php echo $row['product_name']; ?></td>
+            <button type="button" class="modal-close" onclick="closeRequestProductModal()">
+                &times;
+            </button>
+        </div>
 
-    <td><?php echo $row['brand']; ?></td>
+        <form method="POST" action="../requests/request_product.php" class="add-product-form">
 
-    <td><?php echo $row['category']; ?></td>
+            <input
+                type="text"
+                name="product_name"
+                placeholder="Product Name"
+                required
+            >
 
-    <td><?php echo $row['stock']; ?></td>
+            <select name="category" required>
+                <option value="">Select Category</option>
+                <option value="Writing & Drawing">Writing & Drawing</option>
+                <option value="Paper Products">Paper Products</option>
+                <option value="Organization & Filing">Organization & Filing</option>
+                <option value="Art & Craft Materials">Art & Craft Materials</option>
+                <option value="Desk & Stationery Accessories">Desk & Stationery Accessories</option>
+                <option value="Electronics">Electronics</option>
+            </select>
 
-    <td><?php echo $row['buying_price']; ?></td>
+            <input
+                type="number"
+                name="quantity"
+                placeholder="Quantity"
+                min="1"
+                required
+            >
 
-    <td><?php echo $row['selling_price']; ?></td>
+            <button type="submit" name="send_request" class="submit-product-btn">
+                Submit Request
+            </button>
 
+        </form>
 
-</tr>
+    </div>
 
-<?php } ?>
+</div>
 
-</table>
+<script>
+function openRequestProductModal() {
+    document.getElementById('RequestProductModal').style.display = 'flex';
+}
 
+function closeRequestProductModal() {
+    document.getElementById('RequestProductModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    var requestModal = document.getElementById('RequestProductModal');
+
+    if (event.target === requestModal) {
+        closeRequestProductModal();
+    }
+}
+</script>
 </body>
 </html>

@@ -3,7 +3,7 @@ session_start();
 
 require_once dirname(__DIR__, 2) . '/config/database.php';
 
-if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
+if ($_SESSION['role'] != 'admin') {
     header("Location: ../../dashboard.php");
     exit();
 }
@@ -11,14 +11,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($id > 0) {
-    mysqli_query($conn,
-        "UPDATE product_requests
-         SET status = 'rejected',
-             viewed = 0
-         WHERE request_id = '$id'"
-    );
+    mysqli_query($conn, "DELETE FROM product_requests WHERE request_id = '$id'");
 }
 
 header("Location: view_requests.php");
 exit();
-?>

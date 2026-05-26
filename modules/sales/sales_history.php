@@ -81,30 +81,34 @@ if (isset($_GET['download']) && $_GET['download'] === 'csv') {
 
 <div class="main-content">
 
-    <div class="page-title page-title-with-actions">
-
     <div class="page-title-left">
         <a href="new_sale.php" class="icon-back-btn" aria-label="Back to new sale">
             &#8592;
         </a>
 
-        <div>
-            <h1>Sales History</h1>
-            <p>View completed transactions and receipt records</p>
-        </div>
-    </div>
+        <div class="sales-page">
 
-    <div class="page-actions">
-        <a href="sales_history.php?download=csv" class="btn btn-success">
-            Download
-        </a>
+      <div>
+            <h1 class="sales-title">Sales History</h1>
+            <p class="sales-subtitle">
+                View completed transactions and receipt records
+            </p>
+        </div>
+
+   
     </div>
 
 </div>
     <div class="table-container sales-history-card">
+             
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Transaction History</h2>
+            <a href="sales_history.php?download=csv" class="btn btn-success">
+            Download
+        </a>
 
-        <h2>Transaction Records</h2>
-
+        </div>
+ <div>
         <table class="sales-history-table">
             <thead>
                 <tr>

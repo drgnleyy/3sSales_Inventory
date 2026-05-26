@@ -1548,3 +1548,142 @@ button,
         grid-column: span 1;
     }
 }
+
+.notif-wrapper {
+    position: relative;
+}
+
+.notif-btn {
+    background: #1e3a8a;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.notif-dropdown {
+    display: none;
+    position: absolute;
+    top: 48px;
+    right: 0;
+    width: 320px;
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+    z-index: 3000;
+    overflow: hidden;
+}
+
+.notif-dropdown.show {
+    display: block;
+}
+
+.notif-title {
+    padding: 14px 16px;
+    font-weight: 800;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.notif-item {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.notif-item p {
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.notif-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.notif-actions button {
+    flex: 1;
+    height: 32px;
+    border: none;
+    border-radius: 7px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.notif-approve {
+    background: #16a34a;
+}
+
+.notif-reject {
+    background: #dc2626;
+}
+
+.notif-empty {
+    padding: 16px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.notif-view-all {
+    display: block;
+    padding: 12px 16px;
+    text-align: center;
+    background: #f8fafc;
+    color: #2563eb !important;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+
+/* PRODUCT REQUESTS PAGE */
+
+.request-toolbar {
+    margin-bottom: 18px;
+}
+
+.request-search-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.request-search-form input {
+    width: 320px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+}
+
+.request-search-form input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+.request-table th,
+.request-table td {
+    vertical-align: middle;
+}
+
+.request-action-btn {
+    padding: 7px 11px;
+    font-size: 13px;
+    margin: 2px;
+}
+
+@media (max-width: 768px) {
+    .request-search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .request-search-form input {
+        width: 100%;
+    }
+}

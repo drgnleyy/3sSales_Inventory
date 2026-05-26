@@ -51,6 +51,8 @@ $result = mysqli_query($conn, $query);
             <button type="button" class="btn btn-primary" onclick="openAddProductModal()">
     Add Product
 </button>
+
+
         </div>
 
         <table>

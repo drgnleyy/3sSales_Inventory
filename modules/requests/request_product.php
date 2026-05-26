@@ -35,78 +35,9 @@ if(isset($_POST['send_request'])){
 
     );
 
-    header("Location: request_product.php");
+    header("Location: my_requests.php? success=1");
     exit();
 }
 
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-
-    <title>Request Product</title>
-
-    <link rel="stylesheet"
-          href="../../assets/css/style.css">
-
-</head>
-<body>
-
-<div class="main-content">
-
-    <div class="form-container">
-
-        <h2>Request Product</h2>
-
-        <form method="POST">
-
-            <div class="form-group">
-
-                <label>Product Name</label>
-
-                <input type="text"
-                       name="product_name"
-                       class="form-control"
-                       required>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Category</label>
-
-                <input type="text"
-                       name="category"
-                       class="form-control"
-                       required>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Quantity</label>
-
-                <input type="number"
-                       name="quantity"
-                       class="form-control"
-                       required>
-
-            </div>
-
-            <button type="submit"
-                    name="send_request"
-                    class="btn btn-primary">
-
-                Send Request
-
-            </button>
-
-        </form>
-
-    </div>
-
-</div>
-
-</body>
-</html>

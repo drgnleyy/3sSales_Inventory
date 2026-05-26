@@ -12,15 +12,12 @@ if($_SESSION['role'] != 'cashier'){
 
 $user_id = $_SESSION['user_id'];
 
-/* MARK AS READ */
 mysqli_query($conn,
-
     "UPDATE product_requests
-
-     SET viewed=1
-
-     WHERE requested_by='$user_id'"
-
+     SET viewed = 1
+     WHERE requested_by = '$user_id'
+     AND status != 'pending'
+     AND viewed = 0"
 );
 
 /* FETCH REQUESTS */
@@ -50,7 +47,31 @@ $query = mysqli_query($conn,
 </head>
 <body>
 
+<?php include dirname(__DIR__, 2) . '/includes/navbar.php'; ?>
+
+<!-- SIDEBAR -->
+<?php include dirname(__DIR__, 2) . '/includes/sidebar.php'; ?>
+
 <div class="main-content">
+
+<?php if (isset($_GET['success']) && $_GET['success'] == 1) { ?>
+    <div class="alert alert-success">
+        Product request submitted successfully.
+    </div>
+<?php } ?>
+
+
+<div class="sales-page">
+
+      <div>
+            <h1 class="sales-title">Request Board</h1>
+            <p class="sales-subtitle">
+                Monitor the status of your product requests and stay informed about inventory needs
+            </p>
+        </div>
+
+   
+    </div>
 
     <div class="table-container">
 
